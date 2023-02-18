@@ -25,6 +25,8 @@
 		<CheckBoxPreference android:key="@string/pref_key_tmobile"
 			android:title="@string/pref_title_tmobile" android:summary="@string/pref_desc_tmobile_ms"
 			android:defaultValue="false" />
+		<ListPreference android:key="pref_key_selected_dns" android:title="@string/selected_dns"
+			android:summary="%s" />
 		<EditTextPreference android:key="@string/pref_key_tmobile_ms"
 			android:numeric="integer" android:title="@string/pref_title_tmobile_ms"
 			android:defaultValue="1000" android:layout="?android:attr/preferenceLayoutChild"

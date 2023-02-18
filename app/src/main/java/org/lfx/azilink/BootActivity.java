@@ -34,7 +34,7 @@ public class BootActivity extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences pref = AziLinkApplication.getSP();
 			boolean needToStart = pref.getBoolean(context.getString(R.string.pref_key_active), false);
 			if(needToStart) {
 				context.startService(new Intent(context, ForwardService.class));

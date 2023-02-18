@@ -31,8 +31,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -40,7 +40,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.widget.Switch;
 
 import java.text.DecimalFormat;
 
@@ -68,6 +67,8 @@ public class MainActivity extends PreferenceActivity {
 	private EditTextPreference mTM;
 	/** Formatting for all the byte counters */
 	private DecimalFormat mFormat = new DecimalFormat("###,###,###,###,###");
+	/** Select proxies from system */
+	private ListPreference mSelectedProxy;
 	/** Debug logging active? */
 	//private static boolean sLog = false;
 
@@ -87,18 +88,21 @@ public class MainActivity extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.preferences);
 
 		// Get convenience pointers to all the important preferences.
-		mActive = (SwitchPreference) findPreference(getString(R.string.pref_key_active));
+		mActive         = (SwitchPreference) findPreference(getString(R.string.pref_key_active));
 		mStatus 		= findPreference(getString(R.string.pref_key_status));
 		mBytesRecv 		= findPreference(getString(R.string.pref_key_bytesrecv));
 		mBytesSent 		= findPreference(getString(R.string.pref_key_bytessent));
 		mBytesTotal 	= findPreference(getString(R.string.pref_key_bytestotal));
 		mTcpConnections = findPreference(getString(R.string.pref_key_tcpconn));
 		mNatSize 		= findPreference(getString(R.string.pref_key_natsize));
-		mTM = (EditTextPreference) findPreference(getString(R.string.pref_key_tmobile_ms));
+		mTM             = (EditTextPreference) findPreference(getString(R.string.pref_key_tmobile_ms));
+		mSelectedProxy  = (ListPreference) findPreference("pref_key_selected_dns");
+		CharSequence[] entries = Reflection.getSystemDNS().toArray(new CharSequence[0]);
+		mSelectedProxy.setEntries(entries);
+		mSelectedProxy.setEntryValues(entries);
 
 		// Activate/deactivate service
 		mActive.setOnPreferenceChangeListener(mActiveListen);
-		mActive.setChecked(false);
 
 		// Reset the statistics
 		Preference resetStats = findPreference(getString(R.string.pref_key_reset));        
@@ -172,13 +176,13 @@ public class MainActivity extends PreferenceActivity {
 			Intent svcIntent = new Intent(MainActivity.this, ForwardService.class);
 			if( !active ) {
 				//if(sLog) Log.v("AziLink","app::active going off (stop)");
+				mConnection.onServiceDisconnected(null);
 				try {
 					// mService.stopService();
 					unbindService(mConnection);
 					stopService(svcIntent);
 				} catch(Throwable t){}
 				//stopService(new Intent(MainActivity.this, ForwardService.class));
-				mConnection.onServiceDisconnected(null);
 				//bindService(new Intent(MainActivity.this, ForwardService.class), mConnection, 0 );
 			} else {
 				//if(sLog) Log.v("AziLink","app::active going on");
@@ -207,7 +211,7 @@ public class MainActivity extends PreferenceActivity {
 					mService.resetCounters();
 				} catch (RemoteException e) {}
 			} else {
-				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+				SharedPreferences pref = AziLinkApplication.getSP();
 				SharedPreferences.Editor ed = pref.edit();
 				ed.putLong(getString(R.string.pref_key_saved_bytessent), 0);
 				ed.putLong(getString(R.string.pref_key_saved_bytesrecv), 0);
@@ -250,7 +254,7 @@ public class MainActivity extends PreferenceActivity {
 				ls = new LinkStatistics();			
 
 				// This is not called regularly, so it's okay to be a little slow
-				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+				SharedPreferences pref = AziLinkApplication.getSP();
 				ls.mBytesSent = pref.getLong(getString(R.string.pref_key_saved_bytessent), 0);
 				ls.mBytesRecv = pref.getLong(getString(R.string.pref_key_saved_bytesrecv), 0);
 			}

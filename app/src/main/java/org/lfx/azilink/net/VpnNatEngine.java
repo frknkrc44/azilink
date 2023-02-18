@@ -19,6 +19,10 @@ package org.lfx.azilink.net;
 
 import android.util.Log;
 
+import org.lfx.azilink.AziLinkApplication;
+import org.lfx.azilink.R;
+import org.lfx.azilink.Reflection;
+
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
@@ -91,12 +95,15 @@ public class VpnNatEngine implements TransferStatistics {
 	/**
 	 * Figure out what IP address to redirect DNS packets to.  By default, we read
 	 * net.dns1 to pull the default android DNS server.  If that call fails for some reason,
-	 * we just use 1.1.1.1
+	 * we just use 9.9.9.9
 	 * @return ip address of dns server
 	 */
 	static public int getDnsIp() {
-		String ip = "1.1.1.1";
 		try {
+			String ip = AziLinkApplication.getSP().getString(
+					"pref_key_selected_dns", Reflection.getSystemDNS().get(0).toString());
+			Log.d(AziLinkApplication.getCtx().getString(R.string.app_name), "System DNS: " + ip);
+
 			Inet4Address addr = (Inet4Address) Inet4Address.getByName(ip);
 			byte[] v = addr.getAddress();
 			int returnv;

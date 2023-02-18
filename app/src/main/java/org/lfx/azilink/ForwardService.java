@@ -67,10 +67,9 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 	Handler mHandler = new Handler();
 	/** Enable debug logging. */
 	final static boolean sLog = false;
-	
-	/** Get app name as log tag. */
+
 	private String getLogTag(){
-		return getString(R.string.app_name);
+		return AziLinkApplication.getLogTag();
 	}
 	
 	/**
@@ -81,7 +80,7 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 		super.onCreate();
 		
 		//if(sLog) Log.v(getLogTag(), "fwd::onCreate");
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences pref = AziLinkApplication.getSP();
 		mBytesSavedSent = pref.getLong(getString(R.string.pref_key_saved_bytessent), 0);
 		mBytesSavedRecv = pref.getLong(getString(R.string.pref_key_saved_bytesrecv), 0);
                 
@@ -149,7 +148,7 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 		mBytesSavedSent += mEngine.getBytesSent();
 		mBytesSavedRecv += mEngine.getBytesRecv();		
 		
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences pref = AziLinkApplication.getSP();
 		SharedPreferences.Editor ed = pref.edit();
 		ed.putLong(getString(R.string.pref_key_saved_bytessent), mBytesSavedSent);
 		ed.putLong(getString(R.string.pref_key_saved_bytesrecv), mBytesSavedRecv);
@@ -187,7 +186,7 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 
 		sendNotification(R.string.app_name, R.string.status_listen, true);
 		
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences pref = AziLinkApplication.getSP();
 		return pref.getBoolean(getString(R.string.pref_key_autodisconnect),true);
         //mPowerLock.release();
 	}
@@ -299,7 +298,7 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 			mBytesSavedRecv = 0;		
 			//if(sLog) Log.v(getLogTag(), "fwd::reset");
 			
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ForwardService.this);
+			SharedPreferences pref = AziLinkApplication.getSP();
 			SharedPreferences.Editor ed = pref.edit();
 			ed.putLong(getString(R.string.pref_key_saved_bytessent), mBytesSavedSent);
 			ed.putLong(getString(R.string.pref_key_saved_bytesrecv), mBytesSavedRecv);
