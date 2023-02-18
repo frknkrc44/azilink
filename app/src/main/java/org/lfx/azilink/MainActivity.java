@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.preference.EditTextPreference;
@@ -103,6 +104,12 @@ public class MainActivity extends PreferenceActivity {
 
 		// Activate/deactivate service
 		mActive.setOnPreferenceChangeListener(mActiveListen);
+
+		// If app is closed before disable the service,
+		// activate the service again
+		if (mActive.isChecked()) {
+			mActiveListen.onPreferenceChange(mActive, Boolean.TRUE);
+		}
 
 		// Reset the statistics
 		Preference resetStats = findPreference(getString(R.string.pref_key_reset));        
@@ -235,7 +242,7 @@ public class MainActivity extends PreferenceActivity {
 	/**
 	 * Used to periodically update the transfer statistics.
 	 */
-	private final Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler(Looper.getMainLooper());
 
 	/**
 	 * Update the transfer statistics.
