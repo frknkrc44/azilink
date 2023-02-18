@@ -61,8 +61,8 @@ public class MainActivity extends PreferenceActivity {
 	private Preference mBytesTotal;
 	/** # of TCP connections in the NAT table */
 	private Preference mTcpConnections;
-	/** # of entries in the NAT table */
-	private Preference mNatSize;
+	/** # of UDP connections in the NAT table */
+	private Preference mUdpConnections;
 	/** Timeout for the T-Mobile workaround (ms). */
 	private EditTextPreference mTM;
 	/** Formatting for all the byte counters */
@@ -94,7 +94,7 @@ public class MainActivity extends PreferenceActivity {
 		mBytesSent 		= findPreference(getString(R.string.pref_key_bytessent));
 		mBytesTotal 	= findPreference(getString(R.string.pref_key_bytestotal));
 		mTcpConnections = findPreference(getString(R.string.pref_key_tcpconn));
-		mNatSize 		= findPreference(getString(R.string.pref_key_natsize));
+		mUdpConnections = findPreference(getString(R.string.pref_key_udpconn));
 		mTM             = (EditTextPreference) findPreference(getString(R.string.pref_key_tmobile_ms));
 		mSelectedProxy  = (ListPreference) findPreference("pref_key_selected_dns");
 		CharSequence[] entries = Reflection.getSystemDNS().toArray(new CharSequence[0]);
@@ -268,7 +268,7 @@ public class MainActivity extends PreferenceActivity {
 			mBytesSent.setSummary(mFormat.format(ls.mBytesSent));
 			mBytesTotal.setSummary(mFormat.format(ls.mBytesRecv + ls.mBytesSent));
 			mTcpConnections.setSummary(mFormat.format(ls.mTcpConnections));
-			mNatSize.setSummary(mFormat.format(ls.mTcpConnections + ls.mUdpConnections));
+			mUdpConnections.setSummary(mFormat.format(ls.mUdpConnections));
 
 			if(mService != null) {
 				mHandler.removeCallbacks(this);

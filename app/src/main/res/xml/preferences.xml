@@ -16,8 +16,8 @@
 	<Preference android:summary="0" android:title="@string/pref_title_tcpconn"
 		android:key="@string/pref_key_tcpconn" android:selectable="false"
 		android:persistent="false" />
-	<Preference android:summary="0" android:title="@string/pref_title_natsize"
-		android:key="@string/pref_key_natsize" android:selectable="false"
+	<Preference android:summary="0" android:title="@string/pref_title_udpconn"
+		android:key="@string/pref_key_udpconn" android:selectable="false"
 		android:persistent="false" />
 	<Preference android:title="@string/pref_title_reset"
 		android:key="@string/pref_key_reset" android:persistent="false" />

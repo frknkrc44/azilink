@@ -10,14 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1419c635-9076-47ee-9a00-dab0e71eea57" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/AziLinkApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/BootActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/BootActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/ForwardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/ForwardService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/net/VpnNatEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/lfx/azilink/net/VpnNatEngine.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" afterDir="false" />
     </list>
