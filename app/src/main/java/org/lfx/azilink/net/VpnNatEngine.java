@@ -25,6 +25,8 @@ import org.lfx.azilink.Reflection;
 
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -56,7 +58,7 @@ public class VpnNatEngine implements TransferStatistics {
 	/** Queue of all timer events */
 	TimerQueue mTimers = new TimerQueue();
 	/** Enable debug logging? */
-	static final boolean sLog = false;
+	static final boolean sLog = true;
 	/** Enable T-Mobile workaround? */
 	boolean mTMobileWorkaround = false;
 	/** Enable ping timeouts for the VPN link? */
@@ -98,22 +100,19 @@ public class VpnNatEngine implements TransferStatistics {
 	 * we just use 9.9.9.9
 	 * @return ip address of dns server
 	 */
-	static public int getDnsIp() {
+	static public InetAddress getDnsIp() {
 		try {
 			String ip = AziLinkApplication.getSP().getString(
 					"pref_key_selected_dns", Reflection.getSystemDNS().get(0).toString());
 			Log.d(AziLinkApplication.getCtx().getString(R.string.app_name), "System DNS: " + ip);
 
-			Inet4Address addr = (Inet4Address) Inet4Address.getByName(ip);
-			byte[] v = addr.getAddress();
-			int returnv;
-			returnv  = ((v[0]&0xFF) << 24);		// would it really have fucking killed them to include unsigned
-			returnv |= ((v[1]&0xFF) << 16);
-			returnv |= ((v[2]&0xFF) << 8);
-			returnv |= (v[3]&0xFF);
-			return returnv;			
-		} catch (UnknownHostException e) {
-			return 0x09090909;		// 9.9.9.9 is a public dns			
+			return InetAddress.getByName(ip);
+		} catch (Throwable ignored) {}
+
+		try {
+			return InetAddress.getByName("9.9.9.9");
+		} catch(Throwable ignored) {
+			return null;
 		}
 	}
 	

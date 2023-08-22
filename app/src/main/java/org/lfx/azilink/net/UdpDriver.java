@@ -72,22 +72,23 @@ public class UdpDriver extends SocketHandler implements TimerCallback {
 		mChannel.configureBlocking(false);
 		mIcmp = icmp;
 		mAddr = nk;
-	
-		int destIp = mAddr.mDestIp;
-		if( mAddr.mDestPort == 53 && mAddr.mDestIp == 0xC0A83801 ) {	// 192.168.56.1
+
+		int ip = mAddr.mDestIp;
+		byte[] addr = new byte[4];
+		addr[0] = (byte)(ip >> 24);
+		addr[1] = (byte)(ip >> 16);
+		addr[2] = (byte)(ip >> 8);
+		addr[3] = (byte)(ip >> 0);
+		InetAddress destIp = InetAddress.getByAddress(addr);
+
+		if( mAddr.mDestPort == 53 && mAddr.mDestIp == 0xC0A83801 ) {	// 0xC0A83801 = 192.168.56.1
 			// Redirect 192.168.56.1:53 to the actual dns server
 			if(VpnNatEngine.sLog) Log.v("AziLink", "Redirecting DNS packet");
-			destIp = VpnNatEngine.getDnsIp();			
+			destIp = VpnNatEngine.getDnsIp();
 		}
-		
-		byte[] addr = new byte[4];
-		addr[0] = (byte)(destIp >> 24);
-		addr[1] = (byte)(destIp >> 16);
-		addr[2] = (byte)(destIp >> 8);
-		addr[3] = (byte)(destIp >> 0);
-				
-		if(VpnNatEngine.sLog) Log.v("AziLink", "Connect to foreign host (udp) " + InetAddress.getByAddress(addr).getHostAddress() + ":" + nk.mDestPort );		
-		mChannel.connect( new InetSocketAddress( InetAddress.getByAddress( addr ), nk.mDestPort ) );
+
+		if(VpnNatEngine.sLog) Log.v("AziLink", "Connect to foreign host (udp) " + destIp.getHostAddress() + ":" + nk.mDestPort );
+		mChannel.connect( new InetSocketAddress( destIp, nk.mDestPort ) );
 		mChannel.register( mEngine.mSelectThread.mSelector, SelectionKey.OP_READ, this );
 		setTimer();
 		mLastPacket = pkt;

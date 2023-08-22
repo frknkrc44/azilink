@@ -178,21 +178,21 @@ public class TcpDriverImpl implements TcpDriver {
 					// This is the first SYN packet, so begin a new connection.
 					if(VpnNatEngine.sLog) Log.v("AziLink", "Tcp::newPacket - begin BIND" );
 					mAddr = pkt.getAddresses();
-					
-					int destIp = mAddr.mDestIp;
+
+					int ip = mAddr.mDestIp;
+					byte[] addr = new byte[4];
+					addr[0] = (byte)(ip >> 24);
+					addr[1] = (byte)(ip >> 16);
+					addr[2] = (byte)(ip >> 8);
+					addr[3] = (byte)(ip >> 0);
+					InetAddress destIp = InetAddress.getByAddress(addr);
 					
 					if( mAddr.mDestPort == 53 && mAddr.mDestIp == 0xC0A83801 ) {	// 0xC0A83801 = 192.168.56.1
 						// Redirect 192.168.56.1:53 to the actual dns server
 						if(VpnNatEngine.sLog) Log.v("AziLink", "Redirecting DNS TCP link");
-						destIp = VpnNatEngine.getDnsIp();						
+						destIp = VpnNatEngine.getDnsIp();
 					}
-					
-					byte[] addr = new byte[4];
-					addr[0] = (byte)(destIp >> 24);
-					addr[1] = (byte)(destIp >> 16);
-					addr[2] = (byte)(destIp >> 8);
-					addr[3] = (byte)(destIp >> 0);
-					
+
 					mBindStarted = true;
 					mInSeq = pkt.getSeq();
 					mInBuffer.put(0, (byte) 0);
@@ -200,7 +200,7 @@ public class TcpDriverImpl implements TcpDriver {
 					mInSyn = true;
 					setDestroyTimer(mTimeConnect);
 					// Ask NIO to begin connect()
-					mCallback.onBeginBind(new InetSocketAddress(InetAddress.getByAddress( addr ), mAddr.mDestPort));					
+					mCallback.onBeginBind(new InetSocketAddress(destIp, mAddr.mDestPort));
 				} else {
 					// The host retransmitted the SYN because we're taking too long.  Don't need to do anything.
 					if(VpnNatEngine.sLog) Log.v("AziLink", "Tcp::newPacket - renew BIND" );

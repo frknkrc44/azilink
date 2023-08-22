@@ -66,6 +66,8 @@ public class MainActivity extends PreferenceActivity {
 	private Preference mUdpConnections;
 	/** Timeout for the T-Mobile workaround (ms). */
 	private EditTextPreference mTM;
+	/** Socket port for connections */
+	private EditTextPreference mSocketPort;
 	/** Formatting for all the byte counters */
 	private DecimalFormat mFormat = new DecimalFormat("###,###,###,###,###");
 	/** Select proxies from system */
@@ -96,11 +98,9 @@ public class MainActivity extends PreferenceActivity {
 		mBytesTotal 	= findPreference(getString(R.string.pref_key_bytestotal));
 		mTcpConnections = findPreference(getString(R.string.pref_key_tcpconn));
 		mUdpConnections = findPreference(getString(R.string.pref_key_udpconn));
+		mSocketPort     = (EditTextPreference) findPreference(getString(R.string.pref_key_socket_port));
 		mTM             = (EditTextPreference) findPreference(getString(R.string.pref_key_tmobile_ms));
 		mSelectedProxy  = (ListPreference) findPreference("pref_key_selected_dns");
-		CharSequence[] entries = Reflection.getSystemDNS().toArray(new CharSequence[0]);
-		mSelectedProxy.setEntries(entries);
-		mSelectedProxy.setEntryValues(entries);
 
 		// Activate/deactivate service
 		mActive.setOnPreferenceChangeListener(mActiveListen);
@@ -119,6 +119,10 @@ public class MainActivity extends PreferenceActivity {
 		Preference about = findPreference(getString(R.string.pref_key_about));
 		about.setOnPreferenceClickListener(mAboutHandler);
 
+		// Socket port
+		mSocketPort.setOnPreferenceChangeListener(mChangeSocketPort);
+		mSocketPort.setSummary(mSocketPort.getText());
+
 		// T-Mobile workarounds
 		findPreference(getString(R.string.pref_key_tmobile)).setOnPreferenceChangeListener(mChangeTM);
 		mTM.setOnPreferenceChangeListener(mChangeTMtimeout);
@@ -134,6 +138,14 @@ public class MainActivity extends PreferenceActivity {
 	public void onPostCreate(Bundle savedInstanceState){
 		super.onPostCreate(savedInstanceState);
 		mUpdateCallback.run();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		CharSequence[] entries = Reflection.getSystemDNS().toArray(new CharSequence[0]);
+		mSelectedProxy.setEntries(entries);
+		mSelectedProxy.setEntryValues(entries);
 	}
 
 	/**
@@ -328,6 +340,19 @@ public class MainActivity extends PreferenceActivity {
 			mTM.setSummary((String)newValue);
 			return true;
 		}		
+	};
+
+	private final OnPreferenceChangeListener mChangeSocketPort = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			int value = Integer.parseInt((String) newValue);
+			boolean ret = !(value < 1025 || value > 65534);
+			if (ret) {
+				mSocketPort.setSummary((String) newValue);
+			}
+
+			return ret;
+		}
 	};
 
 	@SuppressLint("BatteryLife")

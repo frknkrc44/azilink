@@ -36,7 +36,7 @@ import org.lfx.azilink.net.SelectThread;
  * @author Jim Perry
  *
  */
-public class AboutActivity extends Activity {	
+public class AboutActivity extends Activity implements OnClickListener {
 	
 	/**
 	 * Retrieves the current version from the Android manifest and places it in the dialog.
@@ -47,20 +47,19 @@ public class AboutActivity extends Activity {
 		setContentView(R.layout.about);
 		
 		Button ok = (Button) findViewById(R.id.Return);
-		ok.setOnClickListener(mReturn);
+		ok.setOnClickListener(this);
 		
 		PackageManager pm = getPackageManager();
 		String version = "version unknown";
 		try {
-			PackageInfo pi = pm.getPackageInfo("org.lfx.azilink", 0);
+			PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
 			version = pi.versionName;
-		} catch (NameNotFoundException e) {
-		}
+		} catch (Throwable ignored) {}
 		
 		TextView ver = (TextView) findViewById(R.id.about_version_tag);
 		ver.setText("AziLink " + version + " by Jim Perry & BlinkSD");
 		
-		String port = String.valueOf(SelectThread.mPort);
+		String port = String.valueOf(AziLinkApplication.getPort());
 		
 		TextView aboutHowto = findViewById(R.id.about_body);
 		aboutHowto.setText(aboutHowto.getText().toString().replaceAll("//PORT//", port));
@@ -72,9 +71,7 @@ public class AboutActivity extends Activity {
 	/**
 	 * Closes the dialog when the user hits the return button.
 	 */
-	private OnClickListener mReturn = new OnClickListener() {
-		public void onClick(View v) {
-			finish();
-		}		
-	};
+	public void onClick(View v) {
+		finish();
+	}
 }

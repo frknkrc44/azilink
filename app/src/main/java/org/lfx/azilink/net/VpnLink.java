@@ -210,7 +210,6 @@ public class VpnLink extends SocketHandler {
 			// And the buffer is full?  This packet is ridiculously long!
 			if(VpnNatEngine.sLog) Log.v("AziLink", "Ridiculously long VPN packet was received; killing the connection");
 			mEngine.lostServerLink( this );
-			return;
 		}
 	}
 	

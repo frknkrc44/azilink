@@ -30,4 +30,9 @@ public class AziLinkApplication extends Application {
 
         return sp;
     }
+
+    public static int getPort() {
+        return Integer.parseInt(
+                getSP().getString(app.getString(R.string.pref_key_socket_port), "41927"));
+    }
 }

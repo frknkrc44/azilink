@@ -71,6 +71,8 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 	private String getLogTag(){
 		return AziLinkApplication.getLogTag();
 	}
+
+	private int hash = 0;
 	
 	/**
 	 * Start the VPN engine.  Called when the user clicks "start service."
@@ -78,6 +80,7 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		hash = getPackageName().hashCode();
 		
 		//if(sLog) Log.v(getLogTag(), "fwd::onCreate");
 		SharedPreferences pref = AziLinkApplication.getSP();
@@ -260,9 +263,9 @@ public class ForwardService extends Service implements VpnNatEngineNotify {
 				: nb.getNotification();
 		
 		if(ongoing)
-			startForeground(SelectThread.mPort, notify);
+			startForeground(hash, notify);
 		else
-			nmgr.notify(SelectThread.mPort + 1, notify);
+			nmgr.notify(hash + 1, notify);
 	}
 
 	/**

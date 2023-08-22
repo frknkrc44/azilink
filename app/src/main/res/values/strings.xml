@@ -78,6 +78,8 @@
 	<string name="pref_key_ping">pref_key_ping</string>
 	<string name="pref_title_ping">OpenVPN ping timeouts</string>
 	<string name="pref_desc_ping">Close VPN if no ping within 30 seconds</string>
+	<string name="pref_key_socket_port">pref_key_socket_port</string>
+	<string name="pref_title_socket_port">Socket port</string>
 
 	<string name="notify">AziLink running</string>
 	<string name="selected_dns">Selected DNS</string>

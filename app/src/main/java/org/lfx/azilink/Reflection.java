@@ -59,12 +59,16 @@ public class Reflection {
 
                     if (!linkPropertiesHasDefaultRoute(linkProperties)) {
                         for (InetAddress element : dnsServersList) {
-                            allDNSServers.add(element.getHostAddress());
+                            if (element.getHostAddress().contains(".")) {
+                                allDNSServers.add(element.getHostAddress());
+                            }
                         }
                     }
                     else {
                         for (InetAddress element: dnsServersList) {
-                            allDNSServers.add(element.getHostAddress());
+                            if (element.getHostAddress().contains(".")) {
+                                allDNSServers.add(element.getHostAddress());
+                            }
                         }
                     }
                 }

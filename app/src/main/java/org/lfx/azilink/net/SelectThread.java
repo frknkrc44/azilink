@@ -20,6 +20,8 @@ package org.lfx.azilink.net;
 import android.os.SystemClock;
 import android.util.Log;
 
+import org.lfx.azilink.AziLinkApplication;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -47,7 +49,7 @@ public class SelectThread implements Runnable {
 	/** Pointer to the actual NAT engine; used for callbacks. */
 	VpnNatEngine mEngine;
 	/** Socket port number */
-	public static final int mPort = 41927;
+	// public static final int mPort = 41928;
 	
 	/**
 	 * Construct the select thread.  Does not start the thread.
@@ -94,7 +96,8 @@ public class SelectThread implements Runnable {
 			ServerSocketChannel fdCmd = ServerSocketChannel.open();
 			fdCmd.socket().setReuseAddress( true );			
 			fdCmd.configureBlocking( false );
-			fdCmd.socket().bind( new InetSocketAddress( InetAddress.getByAddress( new byte[] { 127,0,0,1 } ), mPort ) );
+			int port = AziLinkApplication.getPort();
+			fdCmd.socket().bind( new InetSocketAddress( InetAddress.getByAddress( new byte[] { 127,0,0,1 } ), port ) );
 			fdCmd.register( mSelector, SelectionKey.OP_ACCEPT, new SocketHandler( fdCmd ) {
 				/**
 				 * Notify the VPN engine that a new VPN connection has been made.
